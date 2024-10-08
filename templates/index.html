@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoloQ Challenge 2024</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+</head>
+<body>
+    <header>
+        <h1>SoloQ Challenge 2024</h1>
+    </header>
+        
+    <section id="chart-section">
+        <h2>Graphs</h2>
+        <div class="chart-container">
+            <canvas id="playerChart"></canvas>
+        </div>
+    </section>
+
+    <section id="chart-section">
+        <div class="chart-container">
+            <canvas id="teamChart"></canvas>
+        </div>
+    </section>
+
+    <div id="podium-section" class="section">
+        <h2>Top 3 Players</h2>
+        <div class="podium">
+            {% set positions = ['first', 'second', 'third'] %}
+            {% for player_data in top_players %}
+            <div class="podium-step {{ positions[loop.index0] }}">
+                <img src="{{ url_for('static', filename='assets/' ~ player_data['player'] ~ '.png') }}" alt="{{ player_data['player'] }}" id="{{ positions[loop.index0] }}-img">
+                <h3 id="{{ positions[loop.index0] }}-name">{{ player_data['player'] }}</h3>
+                <p>{{ player_data['tier'] }} {{ player_data['rank'] }} - {{ player_data['league_points'] }} LP</p>
+                <p><span style="color: green;">{{ player_data['wins'] }}</span> - <span style="color: red;">{{ player_data['losses'] }}</span></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="ranking-section" class="section">
+        <h2>Ranking</h2>
+        <div class="ranking">
+            {% for player in all_players %}
+            <div class="ranking-step">
+                <span class="rank">{{ loop.index }}</span>
+                <img src="{{ url_for('static', filename='assets/' ~ player['player'] ~ '.png') }}" alt="{{ player['player'] }}" class="player-avatar">
+                <span class="player-name">{{ player['player'] }}</span>
+                <img src="{{ url_for('static', filename='assets/' ~ player['tier'] ~ '.png') }}" alt="{{ player['tier'] }}" class="tier-icon">
+                <span class="player-tier">{{ player['tier'] }} {{ player['rank'] }}</span>
+                <span class="player-lp">{{ player['league_points'] }} LP</span>
+                <span class="win-loss">
+                    <span class="wins">{{ player['wins'] }}</span>
+                    <span class="tier-icon">-</span>
+                    <span class="losses">{{ player['losses'] }}</span>
+                    <span class="tier-icon"> ({{ player['win_ratio'] }}%)</span>
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+</body>
+</html>
